@@ -1,4 +1,5 @@
-import { SIGN_IN, SIGN_OUT } from "./types"
+import { SIGN_IN, SIGN_OUT, CREATE_STREAM } from "./types";
+import axios from '../api/streams';
 
 
 export const signIn = (userId) => {
@@ -13,3 +14,9 @@ export const signOut = () => {
         type: SIGN_OUT
     }
 }
+
+export const streamCreate = (stream) => async (dispatch) => {
+    const response = await axios.post('/streams', stream);
+
+    dispatch({type: CREATE_STREAM, payload: response.data});
+};

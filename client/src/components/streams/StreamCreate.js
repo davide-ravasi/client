@@ -1,12 +1,11 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
+import {streamCreate} from '../../actions';
+import { connect } from 'react-redux';
 
 class StreamCreate extends React.Component {
 
     renderError(meta) {
-        console.log('meta touched',meta.touched);
-        console.log('meta error', meta.error);
-
         if(meta.touched && meta.error) {
             return (
                 <div className="ui message error" style={{'display': 'block'}}>
@@ -38,8 +37,8 @@ class StreamCreate extends React.Component {
 
     /* custom on submit function */
     /* in the props receives the name and the value of every input of the form */ 
-    onSubmit(props) {
-        console.log(props);
+    onSubmit = (formValues) => {
+        this.props.streamCreate(formValues);
     }
 
     render() {
@@ -79,8 +78,11 @@ const validate = (values) => {
     return errors
 }
 
-// it's like connect, it wired up the form with redux
-export default reduxForm({
+// reduxForm wire up the form with redux
+// it's like connect for the components
+const reduxFormConn = reduxForm({
     form: 'streamCreate',
     validate
-})(StreamCreate);
+})(StreamCreate)
+
+export default connect(null, { streamCreate })(reduxFormConn);
