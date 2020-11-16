@@ -1,3 +1,4 @@
+import history from '../history';
 import { 
         SIGN_IN, 
         SIGN_OUT, 
@@ -23,6 +24,8 @@ export const signOut = () => {
     }
 }
 
+/* getState useful to retrieve state inside action */
+/* returned by redux thunk */
 export const streamCreate = (stream) => async (dispatch, getState) => {
     const userId = getState().auth.userId;
     const response = await streams.post('/streams', {...stream, userId});
@@ -31,6 +34,7 @@ export const streamCreate = (stream) => async (dispatch, getState) => {
 
     // Do some programmatic navigation to
     // get the user back to the root route
+    history.push('/');
 };
 
 export const fetchStreams = () => async (dispatch) => {
@@ -46,13 +50,19 @@ export const fetchStream = (id) => async (dispatch) => {
 }
 
 export const editStream = (id, formValues) => async (dispatch) => {
-    const response = await streams.put(`/streams/${id}`, formValues);
+    const response = await streams.patch(`/streams/${id}`, formValues);
 
     dispatch({type: EDIT_STREAM, payload: response.data});
+
+    // Do some programmatic navigation to
+    // get the user back to the root route
+    history.push('/');
 }
 
 export const deleteStream = (id) => async (dispatch) => {
     await streams.delete(`/streams/${id}`);
 
-    dispatch({type: DELETE_STREAM, payload: id })
+    dispatch({type: DELETE_STREAM, payload: id });
+
+    history.push("/");
 }
